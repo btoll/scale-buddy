@@ -1,31 +1,53 @@
 import argparse
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("tonic", help="The tonic note of the scale", type=str)
 parser.add_argument("-f", "--flat", help="Flat", action="store_true")
 parser.add_argument("-s", "--sharp", help="Sharp", action="store_true")
 parser.add_argument("-d", "--delimiter", help="The symbol that separates the notes", type=str, default="  ")
+parser.add_argument("--with-minor", help="Include minor scales", action="store_true")
+parser.add_argument("--with-pentatonic", help="Include pentatonic scales", action="store_true")
 parser.add_argument("-v", "--verbose", help="Add extra information", action="store_true")
 args = parser.parse_args()
 
-accidentals = {
-    "": "",
-    "flat": b"\xe2\x99\xad".decode(),
-    "sharp": b"\xe2\x99\xaf".decode(),
-    "natural": b"\xe3\x99\xae".decode(),
-    "doubleflat": b"\xe2\x99\xad\xe2\x99\xad".decode(),
-    "doublesharp": b"\xe2\x99\xaf\xe2\x99\xaf".decode(),
-    #doublesharp = b"\xf0\x9d\x84\xaa"
+
+natural = b"\xe3\x99\xae".decode()
+flat = b"\xe2\x99\xad".decode()
+doubleflat = flat * 2
+sharp = b"\xe2\x99\xaf".decode()
+doublesharp = sharp * 2
+
+
+has_accidental = args.flat or args.sharp
+
+
+# This is mutated each time as the scale is built, so a copy must always be made.
+interval_table = {
+    "C": 2,
+    "D": 2,
+    "E": 1,
+    "F": 2,
+    "G": 2,
+    "A": 2,
+    "B": 1,
 }
 
 
-diatonic_notes = ( "A", "B", "C", "D", "E", "F", "G" )
+diatonic_notes = ( "C", "D", "E", "F", "G", "A", "B" )
+scale_intervals = {
+    "major": ( 2, 2, 1, 2, 2, 2, 1 ),
+    "harmonic_minor": ( 2, 1, 2, 2, 1, 3, 1 ),
+    "melodic_minor": ( 2, 1, 2, 2, 2, 2, 1 ),
+    "natural_minor": ( 2, 1, 2, 2, 1, 2, 2 ), # aeolian
+}
 
-intervals = {
-    "major": ( 1, 1, 0, 1, 1, 1, 0 ),
-    #"harmonic_minor": (1, 0, 1, 1, 0, 1.5, 0 ),
-    "melodic_minor": ( 1, 0, 1, 1, 1, 1, 0 ),
-    "natural_minor": ( 1, 0, 1, 1, 0, 1, 1 ),
+
+# These are zero-based.
+secondary_scales = {
+    "blues": ( 0, 2, 3, "{flat}4", 4, 6 ),
+    "major_pentatonic": ( 0, 1, 2, 4, 5 ), # 1, 2, 3, 5, 6 of major scale
+    "minor_pentatonic": ( 0, 2, 3, 4, 6 ), # 1, b3, 4, 5, b7 of aeolian (natural minor) scale
 }
 
 
@@ -38,31 +60,15 @@ def display_key_string():
 
 def get_accidental():
     if args.flat:
-        return accidentals["flat"]
+        return flat
     else:
-        return accidentals["sharp"]
-
-
-def get_major_pentatonic_scale(major_scale):
-    # 1, 2, 3, 5, 6
-    return major_scale[0], major_scale[:3] + major_scale[4:6]
+        return sharp
 
 
 #def get_blues_scale(major_scale):
 #    # 1, 3, 4, flat 5, 5, 7
 #    minor_tonic, minor_scale = get_relative_minor_scale(major_scale)
 #    return minor_tonic, minor_scale[:1] + minor_scale[2:5] + minor_scale[6:7]
-
-def get_relative_minor_pentatonic_scale(major_scale):
-    # 1, 3, 4, 5, 7
-    minor_tonic, minor_scale = get_relative_minor_scale(major_scale)
-    return minor_tonic, minor_scale[:1] + minor_scale[2:5] + minor_scale[6:7]
-
-
-def get_relative_minor_scale(major_scale):
-    front = major_scale[-3:]
-    back = major_scale[1:-3]
-    return front[0], front + back + front[:1]
 
 
 #def get_relative_minor_scale(tonic):
@@ -73,81 +79,107 @@ def get_relative_minor_scale(major_scale):
 #    return front[0], front + back + front[:1]
 
 
-def get_scale(tonic, intervals):
-    half_steps = ( "C", "F" )
+# If `args.flat` or `args.sharp` do the opposite!
+def get_scale(tonic, scale_type):
     tonic = tonic.upper()
+    idx = diatonic_notes.index(tonic)
 
-    i = diatonic_notes.index(tonic)
-    interval = intervals[0]
-    partial_scale = diatonic_notes[i+1:] + diatonic_notes[:i]
+    # Don't get the first note because it's pushed onto the stack.
+    target_scale = diatonic_notes[idx+1:] + diatonic_notes[:idx]
 
-    # Note that `get_accidental()` can't be called here because we don't
-    # want the empty string (the default) to return a "sharp".
-    # Else, the key of E would have its tonic changed to E♯.
-    tonic = tonic + display_key_string()
-    carried = bool(display_key_string())
-
+    # Why have two different scale arrays?
+    # This is necessary because one is used to lookup the notes in the
+    # `scale_intervals` dict, and the other is returned to the program
+    # (the `built` array).
+    #
+    # The latter will have accents, both flats and sharps, and this can't
+    # be used to lookup the intervals since the `interval_table` only has
+    # natural notes as its keys.
     scale = [tonic]
-    acc = get_accidental()
+    if has_accidental:
+        built = [tonic + get_accidental()]
+    else:
+        built = [tonic]
 
-    if tonic == "F":
-        return tonic, ["F", "G", "A", "Bflat", "C", "D", "E", "F"]
+    intervals = scale_intervals[scale_type]
+    i_table = interval_table.copy()
 
-    # C natural and all sharps.
-    if not args.flat and not args.sharp or args.sharp:
-        for idx, note in enumerate(partial_scale):
-            i = intervals[idx]
-            if i is 1 and note in half_steps or \
-                i is 1 and note not in half_steps and carried or \
-                note in half_steps and carried:
-                    carried = True
-                    scale.append(note + acc)
+    for i, note in enumerate(target_scale):
+        actual = i_table[scale[i]]
+        target = intervals[i]
+
+        if target == actual:
+            if has_accidental:
+                built.append(note + get_accidental())
             else:
-                carried = False
-                scale.append(note)
+                built.append(note)
 
-    # All flats.
-    if args.flat:
-        for idx, note in enumerate(partial_scale):
-            i = intervals[idx]
-            if i is 1 and carried and note not in half_steps or \
-                i is 0 and not carried and note not in half_steps or \
-                i is 0 and carried and note in half_steps:
-                    carried = True
-                    scale.append(note + acc)
-#            elif i is 1 and carried and note in half_steps or \
-#                i is 1 and not carried and note not in half_steps:
+        elif target - actual == 1:
+            i_table[note] -= 1
+            if has_accidental:
+                built.append(note)
             else:
-                carried = False
-                scale.append(note)
+                built.append(note + get_accidental())
 
-    scale.append(tonic)
-    return tonic, scale
+        elif actual - target == 1:
+            i_table[note] += 1
+            if has_accidental:
+                built.append(note)
+            else:
+                # This is `flat` and not `get_accidental()` purposefully!
+                built.append(note + flat)
+
+        scale.append(note)
+
+    return tonic, built
+
+
+def get_secondary_scale(scale_type, primary_scale):
+    scale = []
+
+    for note in secondary_scales[scale_type]:
+        scale.append(primary_scale[note])
+
+    return scale[0], scale
 
 
 def main():
     try:
-        tonic, major_scale = get_scale(args.tonic, intervals["major"])
-        print(args.tonic.upper() + display_key_string() + " major:")
+        tonic, major_scale = get_scale(args.tonic, "major")
+        print("".join([tonic, display_key_string(), " major:"]))
         print(args.delimiter.join(major_scale))
 
-        if args.verbose:
-        #    tonic, natural_minor_scale = get_scale(args.tonic, intervals["natural_minor"])
-        #    print(args.tonic.upper() + display_key_string() + " natural minor:")
-        #    print(args.delimiter.join(natural_minor_scale))
+        if args.with_minor:
+            s = "".join(["\n", tonic, display_key_string()])
 
-            _, major_pentatonic_scale = get_major_pentatonic_scale(major_scale)
-            print("\n" + tonic + " major pentatonic:")
+            tonic, natural_minor_scale = get_scale(args.tonic, "natural_minor")
+            print("".join([s, " natural minor (Aeolian):"]))
+            print(args.delimiter.join(natural_minor_scale))
+
+            tonic, harmonic_minor_scale = get_scale(args.tonic, "harmonic_minor")
+            print("".join([s, " harmonic minor:"]))
+            print(args.delimiter.join(harmonic_minor_scale))
+
+            tonic, melodic_minor_scale = get_scale(args.tonic, "melodic_minor")
+            print("".join([s, " melodic minor:"]))
+            print(args.delimiter.join(melodic_minor_scale))
+
+        if args.with_pentatonic:
+            s = "".join(["\n", tonic, display_key_string()])
+
+            tonic, natural_minor_scale = get_scale(args.tonic, "natural_minor")
+
+            _, major_pentatonic_scale = get_secondary_scale("major_pentatonic", major_scale)
+            print("".join([s, " major pentatonic:"]))
             print("    ".join(major_pentatonic_scale))
 
-            relative_minor_tonic, minor_scale = get_relative_minor_scale(major_scale)
-            print("\n" + "".join(relative_minor_tonic) + " natural (relative) minor:")
-            print("    ".join(minor_scale))
-
-            _, minor_pentatonic_scale = get_relative_minor_pentatonic_scale(major_scale)
-            print("\n" + "".join(relative_minor_tonic) + " minor pentatonic scale:")
+            _, minor_pentatonic_scale = get_secondary_scale("minor_pentatonic", natural_minor_scale)
+            print("".join([s, " minor pentatonic scale:"]))
             print("    ".join(minor_pentatonic_scale))
+
     except ValueError as err:
         print("[ERROR] The tonic note must be in the range A..G")
 
 
+if __name__ == "__main__":
+    main()

@@ -38,8 +38,9 @@ diatonic_notes = ( "C", "D", "E", "F", "G", "A", "B" )
 scale_intervals = {
     "major": ( 2, 2, 1, 2, 2, 2, 1 ),
     "harmonic_minor": ( 2, 1, 2, 2, 1, 3, 1 ),
-    "melodic_minor": ( 2, 1, 2, 2, 2, 2, 1 ),
+    "melodic_minor": ( 2, 1, 2, 2, 2, 2, 1 ), # jazz minor
     "natural_minor": ( 2, 1, 2, 2, 1, 2, 2 ), # aeolian
+    "altered_dominant": ( 1, 2, 1, 2, 2, 2, 2 ),
 }
 
 
@@ -124,7 +125,10 @@ def get_scale(tonic, scale_type):
         elif actual - target == 1:
             i_table[note] += 1
             if has_accidental:
-                built.append(note)
+                if args.flat:
+                    built.append(note + doubleflat)
+                else:
+                    built.append(note)
             else:
                 # This is `flat` and not `get_accidental()` purposefully!
                 built.append(note + flat)
@@ -149,6 +153,10 @@ def main():
         print("".join([tonic, display_key_string(), " major:"]))
         print(args.delimiter.join(major_scale))
 
+        _, altered_dominant_scale = get_scale(args.tonic, "altered_dominant")
+        print("".join(["\n", tonic, display_key_string(), " altered dominant:"]))
+        print(args.delimiter.join(altered_dominant_scale))
+
         if args.with_minor:
             s = "".join(["\n", tonic, display_key_string()])
 
@@ -161,7 +169,7 @@ def main():
             print(args.delimiter.join(harmonic_minor_scale))
 
             tonic, melodic_minor_scale = get_scale(args.tonic, "melodic_minor")
-            print("".join([s, " melodic minor:"]))
+            print("".join([s, " melodic minor (jazz minor):"]))
             print(args.delimiter.join(melodic_minor_scale))
 
         if args.with_pentatonic:

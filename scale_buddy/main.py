@@ -1,3 +1,7 @@
+# https://en.wikipedia.org/wiki/Jazz_scale#Modes_of_the_melodic_minor_scale
+# https://en.wikipedia.org/wiki/Minor_scale#Modes_of_harmonic_minor_scale
+# https://en.wikipedia.org/wiki/Jazz_minor_scale
+# https://www.jazzguitar.be/blog/melodic-minor-modes/
 import argparse
 
 
@@ -52,6 +56,28 @@ secondary_scales = {
 }
 
 
+modes = {
+    "major": (
+        "Ionian",
+        "Dorian",
+        "Phrygian",
+        "Lydian",
+        "Mixolydian",
+        "Aeolian",
+        "Locrian"
+    ),
+    "melodic_minor": (
+        "Melodic minor",
+        f"Dorian {flat}2 / Phrygian {sharp}6",
+        f"Lydian augmented / Lydian {sharp}5",
+        f"Lydian dominant / Lydian {flat}7",
+        f"Mixolydian {flat}6",
+        f"Locrian {sharp}2 / Aeolian {flat}5",
+        "Super Locrian / altered dominant / altered",
+    ),
+}
+
+
 def display_key_string():
     if not args.flat and not args.sharp:
         return ""
@@ -79,6 +105,16 @@ def get_accidental():
 #    back = major_scale[1:-3]
 #    return front[0], front + back + front[:1]
 
+def get_modes(scale):
+    tonic, notes = get_scale(args.tonic, scale)
+    m = modes[scale]
+    l = len(notes)
+
+    print(" ".join(["Modes of", scale, "scale:"]))
+
+    for i in range(l):
+        mode = args.delimiter.join(notes[i:l] + notes[0:i])
+        print("".join([m[i], "\n", mode, "\n"]))
 
 # If `args.flat` or `args.sharp` do the opposite!
 def get_scale(tonic, scale_type):
@@ -149,13 +185,17 @@ def get_secondary_scale(scale_type, primary_scale):
 
 def main():
     try:
+#        get_modes("major")
+#        print()
+#        get_modes("melodic_minor")
+
         tonic, major_scale = get_scale(args.tonic, "major")
         print("".join([tonic, display_key_string(), " major:"]))
         print(args.delimiter.join(major_scale))
 
-        _, altered_dominant_scale = get_scale(args.tonic, "altered_dominant")
-        print("".join(["\n", tonic, display_key_string(), " altered dominant:"]))
-        print(args.delimiter.join(altered_dominant_scale))
+#        tonic, altered_dominant_scale = get_scale(args.tonic, "altered_dominant")
+#        print("".join(["\n", tonic, display_key_string(), " altered dominant:"]))
+#        print(args.delimiter.join(altered_dominant_scale))
 
         if args.with_minor:
             s = "".join(["\n", tonic, display_key_string()])

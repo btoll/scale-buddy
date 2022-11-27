@@ -3,6 +3,7 @@
 # https://en.wikipedia.org/wiki/Jazz_minor_scale
 # https://www.jazzguitar.be/blog/melodic-minor-modes/
 import argparse
+import ipdb
 
 
 parser = argparse.ArgumentParser()
@@ -21,6 +22,7 @@ flat = b"\xe2\x99\xad".decode()
 doubleflat = flat * 2
 sharp = b"\xe2\x99\xaf".decode()
 doublesharp = sharp * 2
+accidentals = [ doubleflat, flat, "", sharp, doublesharp]
 
 
 has_accidental = args.flat or args.sharp
@@ -78,18 +80,20 @@ modes = {
 }
 
 
-def display_key_string():
-    if not args.flat and not args.sharp:
-        return ""
-    else:
-        return get_accidental()
+#def display_key_string():
+#    if not args.flat and not args.sharp:
+#        return ""
+#    else:
+#        return get_accidental()
 
 
 def get_accidental():
     if args.flat:
         return flat
-    else:
+    elif args.sharp:
         return sharp
+    else:
+        return ""
 
 
 #def get_blues_scale(major_scale):
@@ -118,11 +122,16 @@ def get_modes(scale):
 
 # If `args.flat` or `args.sharp` do the opposite!
 def get_scale(tonic, scale_type):
+    if args.sharp:
+        d = 3
+    elif args.flat:
+        d = 1
+    else:
+        d = 2
+
+    current_accidental = accidentals[d]
     tonic = tonic.upper()
     idx = diatonic_notes.index(tonic)
-
-    # Don't get the first note because it's pushed onto the stack.
-    target_scale = diatonic_notes[idx+1:] + diatonic_notes[:idx]
 
     # Why have two different scale arrays?
     # This is necessary because one is used to lookup the notes in the
@@ -138,36 +147,46 @@ def get_scale(tonic, scale_type):
     else:
         built = [tonic]
 
-    intervals = scale_intervals[scale_type]
-    i_table = interval_table.copy()
+    interval_scale = scale_intervals[scale_type]
+
+    # Don't get the first note because it's pushed onto the stack.
+    target_scale = diatonic_notes[idx+1:] + diatonic_notes[:idx]
 
     for i, note in enumerate(target_scale):
-        actual = i_table[scale[i]]
-        target = intervals[i]
+        diatonic_interval = interval_table[scale[i]]
+        target_interval = interval_scale[i]
+#        ipdb.set_trace()
 
-        if target == actual:
-            if has_accidental:
-                built.append(note + get_accidental())
-            else:
-                built.append(note)
+        if target_interval == diatonic_interval:
+            built.append(note + current_accidental)
+#            if has_accidental:
+#                built.append(note + get_accidental())
+#            else:
+#                built.append(note)
 
-        elif target - actual == 1:
-            i_table[note] -= 1
-            if has_accidental:
-                built.append(note)
-            else:
-                built.append(note + get_accidental())
+#        elif target_interval - diatonic_interval == 1:
+#            built.append(note + get_accidental())
+#            if has_accidental:
+#                built.append(note)
+#            else:
+#                built.append(note + get_accidental())
 
-        elif actual - target == 1:
-            i_table[note] += 1
-            if has_accidental:
-                if args.flat:
-                    built.append(note + doubleflat)
-                else:
-                    built.append(note)
+        elif diatonic_interval != target_interval:
+            if diatonic_interval > target_interval:
+                d -= 1
             else:
-                # This is `flat` and not `get_accidental()` purposefully!
-                built.append(note + flat)
+                d += 1
+
+            current_accidental = accidentals[d]
+            built.append(note + current_accidental)
+#            if has_accidental:
+#                if args.flat:
+#                    built.append(note + doubleflat)
+#                else:
+#                    built.append(note)
+#            else:
+#                # This is `flat` and not `get_accidental()` purposefully!
+#                built.append(note + flat)
 
         scale.append(note)
 
@@ -190,15 +209,15 @@ def main():
 #        get_modes("melodic_minor")
 
         tonic, major_scale = get_scale(args.tonic, "major")
-        print("".join([tonic, display_key_string(), " major:"]))
+        print("".join([tonic, get_accidental(), " major:"]))
         print(args.delimiter.join(major_scale))
 
 #        tonic, altered_dominant_scale = get_scale(args.tonic, "altered_dominant")
-#        print("".join(["\n", tonic, display_key_string(), " altered dominant:"]))
+#        print("".join(["\n", tonic, get_accidental(), " altered dominant:"]))
 #        print(args.delimiter.join(altered_dominant_scale))
 
         if args.with_minor:
-            s = "".join(["\n", tonic, display_key_string()])
+            s = "".join(["\n", tonic, get_accidental()])
 
             tonic, natural_minor_scale = get_scale(args.tonic, "natural_minor")
             print("".join([s, " natural minor (Aeolian):"]))
@@ -213,7 +232,7 @@ def main():
             print(args.delimiter.join(melodic_minor_scale))
 
         if args.with_pentatonic:
-            s = "".join(["\n", tonic, display_key_string()])
+            s = "".join(["\n", tonic, get_accidental()])
 
             tonic, natural_minor_scale = get_scale(args.tonic, "natural_minor")
 

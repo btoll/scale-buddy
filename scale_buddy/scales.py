@@ -1,3 +1,6 @@
+import ipdb
+
+
 natural = b"\xe3\x99\xae".decode()
 flat = b"\xe2\x99\xad".decode()
 doubleflat = flat * 2
@@ -114,9 +117,9 @@ def get_scale(tonic, accidental, scale_type):
 
         elif diatonic_interval != target_interval:
             if diatonic_interval > target_interval:
-                accidental -= 1
+                accidental = accidental - diatonic_interval + target_interval
             else:
-                accidental += 1
+                accidental = accidental + target_interval - diatonic_interval
 
             current_accidental = accidentals[accidental]
             built.append(note + current_accidental)

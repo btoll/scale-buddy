@@ -74,5 +74,11 @@ E♭ major:
 E♭  F  G  A♭  B♭  C  D
 ```
 
+## Testing
+
+```
+$ python -m unittest discover
+```
+
 [the excellent guest post about Scale Buddy]: https://benjamintoll.com//2022/10/26/on-scale-buddy/
 

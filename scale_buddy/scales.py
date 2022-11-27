@@ -74,8 +74,9 @@ modes = {
 #    back = major_scale[1:-3]
 #    return front[0], front + back + front[:1]
 
+
 def get_modes(scale):
-    tonic, notes = get_scale(args.tonic, scale)
+    notes = get_scale(args.tonic, scale)
     m = modes[scale]
     l = len(notes)
 
@@ -84,6 +85,7 @@ def get_modes(scale):
     for i in range(l):
         mode = args.delimiter.join(notes[i:l] + notes[0:i])
         print("".join([m[i], "\n", mode, "\n"]))
+
 
 # If `args.flat` or `args.sharp` do the opposite!
 def get_scale(tonic, accidental, scale_type):
@@ -97,6 +99,7 @@ def get_scale(tonic, accidental, scale_type):
     # (the `built` array).
     #
     # The latter will have accents, both flats and sharps, and this can't
+    tonic = tonic.upper()
     # be used to lookup the intervals since the `interval_table` only has
     # natural notes as its keys.
     scale = [tonic]
@@ -114,7 +117,6 @@ def get_scale(tonic, accidental, scale_type):
 
         if target_interval == diatonic_interval:
             built.append(note + current_accidental)
-
         elif diatonic_interval != target_interval:
             if diatonic_interval > target_interval:
                 accidental = accidental - diatonic_interval + target_interval
@@ -126,7 +128,7 @@ def get_scale(tonic, accidental, scale_type):
 
         scale.append(note)
 
-    return tonic, built
+    return built
 
 
 def get_secondary_scale(scale_type, primary_scale):
@@ -135,6 +137,6 @@ def get_secondary_scale(scale_type, primary_scale):
     for note in secondary_scales[scale_type]:
         scale.append(primary_scale[note])
 
-    return scale[0], scale
+    return scale
 
 

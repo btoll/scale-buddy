@@ -3,7 +3,6 @@
 # https://en.wikipedia.org/wiki/Jazz_minor_scale
 # https://www.jazzguitar.be/blog/melodic-minor-modes/
 import argparse
-import ipdb
 
 import scales
 
@@ -50,39 +49,40 @@ def main():
         else:
             d = 2
 
-        tonic, major_scale = scales.get_scale(args.tonic, d, "major")
+        tonic = args.tonic.upper()
+        major_scale = scales.get_scale(tonic, d, "major")
         print("".join([tonic, get_accidental(), " major:"]))
         print(args.delimiter.join(major_scale))
 
-#        tonic, altered_dominant_scale = get_scale(args.tonic, d, "altered_dominant")
+#        altered_dominant_scale = get_scale(args.tonic, d, "altered_dominant")
 #        print("".join(["\n", tonic, get_accidental(), " altered dominant:"]))
 #        print(args.delimiter.join(altered_dominant_scale))
 
         if args.with_minor:
             s = "".join(["\n", tonic, get_accidental()])
 
-            tonic, natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
+            natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
             print("".join([s, " natural minor (Aeolian):"]))
             print(args.delimiter.join(natural_minor_scale))
 
-            tonic, harmonic_minor_scale = scales.get_scale(args.tonic, d, "harmonic_minor")
+            harmonic_minor_scale = scales.get_scale(args.tonic, d, "harmonic_minor")
             print("".join([s, " harmonic minor:"]))
             print(args.delimiter.join(harmonic_minor_scale))
 
-            tonic, melodic_minor_scale = scales.get_scale(args.tonic, d, "melodic_minor")
+            melodic_minor_scale = scales.get_scale(args.tonic, d, "melodic_minor")
             print("".join([s, " melodic minor (jazz minor):"]))
             print(args.delimiter.join(melodic_minor_scale))
 
         if args.with_pentatonic:
             s = "".join(["\n", tonic, get_accidental()])
 
-            tonic, natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
+            natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
 
-            _, major_pentatonic_scale = get_secondary_scale("major_pentatonic", major_scale)
+            major_pentatonic_scale = get_secondary_scale("major_pentatonic", major_scale)
             print("".join([s, " major pentatonic:"]))
             print("    ".join(major_pentatonic_scale))
 
-            _, minor_pentatonic_scale = get_secondary_scale("minor_pentatonic", natural_minor_scale)
+            minor_pentatonic_scale = get_secondary_scale("minor_pentatonic", natural_minor_scale)
             print("".join([s, " minor pentatonic scale:"]))
             print("    ".join(minor_pentatonic_scale))
 

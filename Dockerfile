@@ -14,5 +14,5 @@ RUN mkdir scale_buddy
 COPY setup.py .
 COPY scale_buddy/ ./scale_buddy
 
-ENTRYPOINT ["python", "scale_buddy/main.py"]
+ENTRYPOINT ["python", "scale_buddy/scale_buddy.py"]
 

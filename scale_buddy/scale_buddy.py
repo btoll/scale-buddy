@@ -23,9 +23,9 @@ has_accidental = args.flat or args.sharp
 
 def get_accidental():
     if args.flat:
-        return flat
+        return scales.flat
     elif args.sharp:
-        return sharp
+        return scales.sharp
     else:
         return ""
 
@@ -46,11 +46,11 @@ def main():
 #        print(scales.get_modes(tonic, "melodic_minor"))
 
         if args.sharp:
-            d = 3
+            accidental = 3
         elif args.flat:
-            d = 1
+            accidental = 1
         else:
-            d = 2
+            accidental = 2
 
         major_scale = scales.get_scale(tonic, d, "major")
         print("".join([tonic, get_accidental(), " major:"]))

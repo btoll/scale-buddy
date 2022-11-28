@@ -17,19 +17,64 @@ interval_table = {
 }
 
 
+semitones = {
+    "flat": (
+        "C",
+        f"D{flat}",
+        "D",
+        f"E{flat}",
+        "E",
+#        "F{flat}",
+        "F",
+        f"G{flat}",
+        "G",
+        f"A{flat}",
+        "A",
+        f"B{flat}",
+        "B"
+    ),
+    "sharp": (
+        "C",
+        f"C{sharp}",
+        "D",
+        f"D{sharp}",
+        "E",
+#        "E{sharp}",
+        "F",
+        f"F{sharp}",
+        "G",
+        f"G{sharp}",
+        "A",
+        f"A{sharp}",
+        "B"
+    )
+}
+
+
 diatonic_notes = ( "C", "D", "E", "F", "G", "A", "B" )
 scale_intervals = {
     "major": ( 2, 2, 1, 2, 2, 2, 1 ),
+    "dorian": ( 2, 1, 2, 2, 2, 1, 2 ),
+    "phrygian": ( 1, 2, 2, 2, 1, 2, 2 ),
+    "lydian": ( 2, 2, 2, 1, 2, 2, 1 ),
+    "mixolydian": ( 2, 2, 1, 2, 2, 1, 2 ),
+    "locrian": ( 1, 2, 2, 1, 2, 2, 2 ),
     "harmonic_minor": ( 2, 1, 2, 2, 1, 3, 1 ),
     "melodic_minor": ( 2, 1, 2, 2, 2, 2, 1 ), # jazz minor
     "natural_minor": ( 2, 1, 2, 2, 1, 2, 2 ), # Aeolian
     "altered_dominant": ( 1, 2, 1, 2, 2, 2, 2 ),
 }
 
+scale_intervals["ionian"] = scale_intervals["major"]
+scale_intervals["aeolian"] = scale_intervals["natural_minor"]
+
 
 # These are zero-based and depend on a scale being handed to them.
 secondary_scales = {
-    "blues": ( 0, 2, 3, "{flat}4", 4, 6 ),
+    "blues": {
+        "depends_on": "natural_minor",
+        "notes": ( 0, 2, 3, 4, 4, 6 ),
+    },
     "major_pentatonic": {
         "depends_on": "major",
         "notes": ( 0, 1, 2, 4, 5 ), # 1, 2, 3, 5, 6 of major scale
@@ -63,6 +108,18 @@ modes = {
 }
 
 
+def get_minor_thirds(tonic, accidental):
+    if accidental == 3:
+        s_tones = semitones["sharp"]
+    else:
+        s_tones = semitones["flat"]
+
+    idx = s_tones.index(tonic + accidentals[accidental])
+    target_scale = s_tones[idx:] + s_tones[:idx]
+
+    return [ target_scale[i] for i in range(0, 12, 3) ]
+
+
 def get_modes(tonic, scale):
     notes = get_scale(tonic, 2, scale)
     mode_names = modes[scale]
@@ -88,6 +145,7 @@ def get_scale(tonic, accidental, scale_type):
     interval_scale = scale_intervals[scale_type]
 
     # Don't get the first note because it's pushed onto the stack.
+    idx = diatonic_notes.index(tonic)
     target_scale = diatonic_notes[idx+1:] + diatonic_notes[:idx]
 
     for i, note in enumerate(target_scale):
@@ -115,5 +173,34 @@ def get_scale(tonic, accidental, scale_type):
 
 def get_secondary_scale(notes, primary_scale):
     return [ primary_scale[note] for note in notes ]
+
+
+def get_tritone(tonic, accidental):
+    if accidental == 3:
+        s_tones = semitones["sharp"]
+    else:
+        s_tones = semitones["flat"]
+
+    idx = s_tones.index(tonic + accidentals[accidental])
+    target_scale = s_tones[idx:] + s_tones[:idx]
+
+    return target_scale[6]
+
+
+def get_whole_half_scale(tonic, accidental):
+    dorian_scale = get_scale(tonic, accidental, "dorian")
+    tritone = get_tritone(tonic, accidental)
+
+    try:
+        tonic, accidental = tritone[0], tritone[1]
+        if accidental == flat:
+            accidental = 1
+        else:
+            accidental = 3
+    except IndexError:
+        tonic = tritone[0]
+        accidental = 2
+
+    return dorian_scale[:4] + get_scale(tonic, accidental, "dorian")[:4]
 
 

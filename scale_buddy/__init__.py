@@ -4,7 +4,7 @@
 # https://www.jazzguitar.be/blog/melodic-minor-modes/
 import argparse
 
-import scales
+import scale_buddy.scales as scales
 
 
 parser = argparse.ArgumentParser()
@@ -53,13 +53,13 @@ def main():
             accidental = 2
 
 #        print(scales.get_tritone(tonic, accidental))
-        whole_half_scale = scales.get_whole_half_scale(tonic, accidental)
-        print("".join([tonic, get_accidental(), " whole-half:"]))
-        print(args.delimiter.join(whole_half_scale))
+#        whole_half_scale = scales.get_whole_half_scale(tonic, accidental)
+#        print("".join([tonic, get_accidental(), " whole-half:"]))
+#        print(args.delimiter.join(whole_half_scale))
 
-#        major_scale = scales.get_scale("major", tonic, accidental)
-#        print("".join([tonic, get_accidental(), " major:"]))
-#        print(args.delimiter.join(major_scale))
+        major_scale = scales.get_scale("major", tonic, accidental)
+        print("".join([tonic, get_accidental(), " major:"]))
+        print(args.delimiter.join(major_scale))
 
 #        blues_scale = scales.get_scale("blues", tonic, accidental)
 #        print("".join([tonic, get_accidental(), " blues:"]))

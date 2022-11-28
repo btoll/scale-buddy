@@ -63,16 +63,12 @@ modes = {
 }
 
 
-def get_modes(scale):
-    notes = get_scale(args.tonic, scale)
-    m = modes[scale]
+def get_modes(tonic, scale):
+    notes = get_scale(tonic, 2, scale)
+    mode_names = modes[scale]
     l = len(notes)
 
-    print(" ".join(["Modes of", scale, "scale:"]))
-
-    for i in range(l):
-        mode = args.delimiter.join(notes[i:l] + notes[0:i])
-        print("".join([m[i], "\n", mode, "\n"]))
+    return { mode_names[i]: notes[i:l] + notes[0:i] for i in range(l) }
 
 
 def get_scale(tonic, accidental, scale_type):
@@ -118,11 +114,6 @@ def get_scale(tonic, accidental, scale_type):
 
 
 def get_secondary_scale(notes, primary_scale):
-    scale = []
-
-    for note in notes:
-        scale.append(primary_scale[note])
-
-    return scale
+    return [ primary_scale[note] for note in notes ]
 
 

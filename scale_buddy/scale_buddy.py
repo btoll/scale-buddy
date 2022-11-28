@@ -39,9 +39,12 @@ def get_accidental():
 
 def main():
     try:
-#        get_modes("major")
+        tonic = args.tonic.upper()
+
+#        print(scales.get_modes(tonic, "major"))
 #        print()
-#        get_modes("melodic_minor")
+#        print(scales.get_modes(tonic, "melodic_minor"))
+
         if args.sharp:
             d = 3
         elif args.flat:
@@ -49,7 +52,6 @@ def main():
         else:
             d = 2
 
-        tonic = args.tonic.upper()
         major_scale = scales.get_scale(tonic, d, "major")
         print("".join([tonic, get_accidental(), " major:"]))
         print(args.delimiter.join(major_scale))
@@ -61,28 +63,26 @@ def main():
         if args.with_minor:
             s = "".join(["\n", tonic, get_accidental()])
 
-            natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
+            natural_minor_scale = scales.get_scale(tonic, d, "natural_minor")
             print("".join([s, " natural minor (Aeolian):"]))
             print(args.delimiter.join(natural_minor_scale))
 
-            harmonic_minor_scale = scales.get_scale(args.tonic, d, "harmonic_minor")
+            harmonic_minor_scale = scales.get_scale(tonic, d, "harmonic_minor")
             print("".join([s, " harmonic minor:"]))
             print(args.delimiter.join(harmonic_minor_scale))
 
-            melodic_minor_scale = scales.get_scale(args.tonic, d, "melodic_minor")
+            melodic_minor_scale = scales.get_scale(tonic, d, "melodic_minor")
             print("".join([s, " melodic minor (jazz minor):"]))
             print(args.delimiter.join(melodic_minor_scale))
 
         if args.with_pentatonic:
             s = "".join(["\n", tonic, get_accidental()])
 
-            natural_minor_scale = scales.get_scale(args.tonic, d, "natural_minor")
-
-            major_pentatonic_scale = get_secondary_scale("major_pentatonic", major_scale)
+            major_pentatonic_scale = scales.get_scale(tonic, d, "major_pentatonic")
             print("".join([s, " major pentatonic:"]))
             print("    ".join(major_pentatonic_scale))
 
-            minor_pentatonic_scale = get_secondary_scale("minor_pentatonic", natural_minor_scale)
+            minor_pentatonic_scale = scales.get_scale(tonic, d, "minor_pentatonic")
             print("".join([s, " minor pentatonic scale:"]))
             print("    ".join(minor_pentatonic_scale))
 

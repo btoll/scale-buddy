@@ -1,68 +1,102 @@
+import functools
 import unittest
 
 from scale_buddy import scales
 
 
+minor_pentatonic_scale = functools.partial(scales.get_scale, scale_type="minor_pentatonic")
+
+
 class TestMinorPentatonicScale(unittest.TestCase):
     def test_C(self):
-        scale = scales.get_scale("C", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["C", "E♭", "F", "G", "B♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="C"),
+            ["C", "E♭", "F", "G", "B♭"]
+        )
 
     def test_C_flat(self):
-        scale = scales.get_scale("C", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["C♭", "E♭♭", "F♭", "G♭", "B♭♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="C", accidental=1),
+            ["C♭", "E♭♭", "F♭", "G♭", "B♭♭"]
+        )
 
     def test_C_sharp(self):
-        scale = scales.get_scale("C", 3, "minor_pentatonic")
-        self.assertEqual(scale, ["C♯", "E", "F♯", "G♯", "B"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="C", accidental=3),
+            ["C♯", "E", "F♯", "G♯", "B"]
+        )
 
     def test_D(self):
-        scale = scales.get_scale("D", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["D", "F", "G", "A", "C"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="D"),
+            ["D", "F", "G", "A", "C"]
+        )
 
     def test_D_flat(self):
-        scale = scales.get_scale("D", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["D♭", "F♭", "G♭", "A♭", "C♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="D", accidental=1),
+            ["D♭", "F♭", "G♭", "A♭", "C♭"]
+        )
 
     def test_E(self):
-        scale = scales.get_scale("E", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["E", "G", "A", "B", "D"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="E"),
+            ["E", "G", "A", "B", "D"]
+        )
 
     def test_E_flat(self):
-        scale = scales.get_scale("E", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["E♭", "G♭", "A♭", "B♭", "D♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="E", accidental=1),
+            ["E♭", "G♭", "A♭", "B♭", "D♭"]
+        )
 
     def test_F(self):
-        scale = scales.get_scale("F", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["F", "A♭", "B♭", "C", "E♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="F"),
+            ["F", "A♭", "B♭", "C", "E♭"]
+        )
 
     def test_F_sharp(self):
-        scale = scales.get_scale("F", 3, "minor_pentatonic")
-        self.assertEqual(scale, ["F♯", "A", "B", "C♯", "E"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="F", accidental=3),
+            ["F♯", "A", "B", "C♯", "E"]
+        )
 
     def test_G(self):
-        scale = scales.get_scale("G", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["G", "B♭", "C", "D", "F"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="G"),
+            ["G", "B♭", "C", "D", "F"]
+        )
 
     def test_G_flat(self):
-        scale = scales.get_scale("G", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["G♭", "B♭♭", "C♭", "D♭", "F♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="G", accidental=1),
+            ["G♭", "B♭♭", "C♭", "D♭", "F♭"]
+        )
 
     def test_A(self):
-        scale = scales.get_scale("A", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["A", "C", "D", "E", "G"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="A"),
+            ["A", "C", "D", "E", "G"]
+        )
 
     def test_A_flat(self):
-        scale = scales.get_scale("A", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["A♭",  "C♭", "D♭", "E♭", "G♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="A", accidental=1),
+            ["A♭",  "C♭", "D♭", "E♭", "G♭"]
+        )
 
     def test_B(self):
-        scale = scales.get_scale("B", 2, "minor_pentatonic")
-        self.assertEqual(scale, ["B",  "D", "E", "F♯",  "A"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="B"),
+            ["B",  "D", "E", "F♯",  "A"]
+        )
 
     def test_B_flat(self):
-        scale = scales.get_scale("B", 1, "minor_pentatonic")
-        self.assertEqual(scale, ["B♭",  "D♭", "E♭", "F",  "A♭"])
+        self.assertEqual(
+            minor_pentatonic_scale(tonic="B", accidental=1),
+            ["B♭",  "D♭", "E♭", "F",  "A♭"]
+        )
 
 
 if __name__ == "__main__":

@@ -52,37 +52,50 @@ def main():
         else:
             accidental = 2
 
-        major_scale = scales.get_scale(tonic, d, "major")
-        print("".join([tonic, get_accidental(), " major:"]))
-        print(args.delimiter.join(major_scale))
+#        print(scales.get_tritone(tonic, accidental))
+        whole_half_scale = scales.get_whole_half_scale(tonic, accidental)
+        print("".join([tonic, get_accidental(), " whole-half:"]))
+        print(args.delimiter.join(whole_half_scale))
 
-#        altered_dominant_scale = get_scale(args.tonic, d, "altered_dominant")
+#        major_scale = scales.get_scale("major", tonic, accidental)
+#        print("".join([tonic, get_accidental(), " major:"]))
+#        print(args.delimiter.join(major_scale))
+
+#        blues_scale = scales.get_scale("blues", tonic, accidental)
+#        print("".join([tonic, get_accidental(), " blues:"]))
+#        print(args.delimiter.join(blues_scale))
+
+#        altered_dominant_scale = get_scale("altered_dominant", args.tonic, accidental)
 #        print("".join(["\n", tonic, get_accidental(), " altered dominant:"]))
 #        print(args.delimiter.join(altered_dominant_scale))
+
+#        dorian_scale = scales.get_scale("dorian", tonic, accidental)
+#        print("".join([tonic, get_accidental(), " dorian:"]))
+#        print(args.delimiter.join(dorian_scale))
 
         if args.with_minor:
             s = "".join(["\n", tonic, get_accidental()])
 
-            natural_minor_scale = scales.get_scale(tonic, d, "natural_minor")
+            natural_minor_scale = scales.get_scale("natural_minor", tonic, accidental)
             print("".join([s, " natural minor (Aeolian):"]))
             print(args.delimiter.join(natural_minor_scale))
 
-            harmonic_minor_scale = scales.get_scale(tonic, d, "harmonic_minor")
+            harmonic_minor_scale = scales.get_scale("harmonic_minor", tonic, accidental)
             print("".join([s, " harmonic minor:"]))
             print(args.delimiter.join(harmonic_minor_scale))
 
-            melodic_minor_scale = scales.get_scale(tonic, d, "melodic_minor")
+            melodic_minor_scale = scales.get_scale("melodic_minor", tonic, accidental)
             print("".join([s, " melodic minor (jazz minor):"]))
             print(args.delimiter.join(melodic_minor_scale))
 
         if args.with_pentatonic:
             s = "".join(["\n", tonic, get_accidental()])
 
-            major_pentatonic_scale = scales.get_scale(tonic, d, "major_pentatonic")
+            major_pentatonic_scale = scales.get_scale("major_pentatonic", tonic, accidental)
             print("".join([s, " major pentatonic:"]))
             print("    ".join(major_pentatonic_scale))
 
-            minor_pentatonic_scale = scales.get_scale(tonic, d, "minor_pentatonic")
+            minor_pentatonic_scale = scales.get_scale("minor_pentatonic", tonic, accidental)
             print("".join([s, " minor pentatonic scale:"]))
             print("    ".join(minor_pentatonic_scale))
 

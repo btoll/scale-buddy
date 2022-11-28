@@ -1,68 +1,102 @@
+import functools
 import unittest
 
 from scale_buddy import scales
 
 
+natural_minor_scale = functools.partial(scales.get_scale, scale_type="natural_minor")
+
+
 class TestNaturalMinorScale(unittest.TestCase):
     def test_C(self):
-        scale = scales.get_scale("C", 2, "natural_minor")
-        self.assertEqual(scale, ["C", "D", "E♭", "F", "G", "A♭", "B♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="C"),
+            ["C", "D", "E♭", "F", "G", "A♭", "B♭"]
+        )
 
     def test_C_flat(self):
-        scale = scales.get_scale("C", 1, "natural_minor")
-        self.assertEqual(scale, ["C♭", "D♭", "E♭♭", "F♭", "G♭", "A♭♭", "B♭♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="C", accidental=1),
+            ["C♭", "D♭", "E♭♭", "F♭", "G♭", "A♭♭", "B♭♭"]
+        )
 
     def test_C_sharp(self):
-        scale = scales.get_scale("C", 3, "natural_minor")
-        self.assertEqual(scale, ["C♯", "D♯", "E", "F♯", "G♯", "A", "B"])
+        self.assertEqual(
+            natural_minor_scale(tonic="C", accidental=3),
+            ["C♯", "D♯", "E", "F♯", "G♯", "A", "B"]
+        )
 
     def test_D(self):
-        scale = scales.get_scale("D", 2, "natural_minor")
-        self.assertEqual(scale, ["D", "E", "F", "G", "A", "B♭", "C"])
+        self.assertEqual(
+            natural_minor_scale(tonic="D"),
+            ["D", "E", "F", "G", "A", "B♭", "C"]
+        )
 
     def test_D_flat(self):
-        scale = scales.get_scale("D", 1, "natural_minor")
-        self.assertEqual(scale, ["D♭", "E♭", "F♭", "G♭", "A♭", "B♭♭", "C♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="D", accidental=1),
+            ["D♭", "E♭", "F♭", "G♭", "A♭", "B♭♭", "C♭"]
+        )
 
     def test_E(self):
-        scale = scales.get_scale("E", 2, "natural_minor")
-        self.assertEqual(scale, ["E", "F♯", "G", "A", "B", "C", "D"])
+        self.assertEqual(
+            natural_minor_scale(tonic="E"),
+            ["E", "F♯", "G", "A", "B", "C", "D"]
+        )
 
     def test_E_flat(self):
-        scale = scales.get_scale("E", 1, "natural_minor")
-        self.assertEqual(scale, ["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="E", accidental=1),
+            ["E♭", "F", "G♭", "A♭", "B♭", "C♭", "D♭"]
+        )
 
     def test_F(self):
-        scale = scales.get_scale("F", 2, "natural_minor")
-        self.assertEqual(scale, ["F", "G", "A♭", "B♭", "C", "D♭", "E♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="F"),
+            ["F", "G", "A♭", "B♭", "C", "D♭", "E♭"]
+        )
 
     def test_F_sharp(self):
-        scale = scales.get_scale("F", 3, "natural_minor")
-        self.assertEqual(scale, ["F♯", "G♯", "A", "B", "C♯", "D", "E"])
+        self.assertEqual(
+            natural_minor_scale(tonic="F", accidental=3),
+            ["F♯", "G♯", "A", "B", "C♯", "D", "E"]
+        )
 
     def test_G(self):
-        scale = scales.get_scale("G", 2, "natural_minor")
-        self.assertEqual(scale, ["G", "A", "B♭", "C", "D", "E♭", "F"])
+        self.assertEqual(
+            natural_minor_scale(tonic="G"),
+            ["G", "A", "B♭", "C", "D", "E♭", "F"]
+        )
 
     def test_G_flat(self):
-        scale = scales.get_scale("G", 1, "natural_minor")
-        self.assertEqual(scale, ["G♭", "A♭", "B♭♭", "C♭", "D♭", "E♭♭", "F♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="G", accidental=1),
+            ["G♭", "A♭", "B♭♭", "C♭", "D♭", "E♭♭", "F♭"]
+        )
 
     def test_A(self):
-        scale = scales.get_scale("A", 2, "natural_minor")
-        self.assertEqual(scale, ["A", "B", "C", "D", "E", "F", "G"])
+        self.assertEqual(
+            natural_minor_scale(tonic="A"),
+            ["A", "B", "C", "D", "E", "F", "G"]
+        )
 
     def test_A_flat(self):
-        scale = scales.get_scale("A", 1, "natural_minor")
-        self.assertEqual(scale, ["A♭", "B♭", "C♭", "D♭", "E♭", "F♭", "G♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="A", accidental=1),
+            ["A♭", "B♭", "C♭", "D♭", "E♭", "F♭", "G♭"]
+        )
 
     def test_B(self):
-        scale = scales.get_scale("B", 2, "natural_minor")
-        self.assertEqual(scale, ["B", "C♯", "D", "E", "F♯", "G", "A"])
+        self.assertEqual(
+            natural_minor_scale(tonic="B"),
+            ["B", "C♯", "D", "E", "F♯", "G", "A"]
+        )
 
     def test_B_flat(self):
-        scale = scales.get_scale("B", 1, "natural_minor")
-        self.assertEqual(scale, ["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭"])
+        self.assertEqual(
+            natural_minor_scale(tonic="B", accidental=1),
+            ["B♭", "C", "D♭", "E♭", "F", "G♭", "A♭"]
+        )
 
 
 if __name__ == "__main__":

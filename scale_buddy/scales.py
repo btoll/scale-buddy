@@ -128,10 +128,9 @@ def get_modes(tonic, scale):
     return { mode_names[i]: notes[i:l] + notes[0:i] for i in range(l) }
 
 
-def get_scale(tonic, accidental, scale_type):
+def get_scale(scale_type, tonic, accidental=2):
     tonic = tonic.upper()
     current_accidental = accidentals[accidental]
-    idx = diatonic_notes.index(tonic)
     has_secondary_scale = False
 
     scale = [tonic]

@@ -7,12 +7,14 @@ RUN useradd \
 
 USER noroot
 
+ENV PATH="$PATH":/home/noroot/.local/bin
+
 WORKDIR /home/noroot
 
-RUN mkdir scale_buddy
-
-COPY setup.py .
+COPY setup.py setup.cfg ./
 COPY scale_buddy/ ./scale_buddy
 
-ENTRYPOINT ["python", "scale_buddy/scale_buddy.py"]
+RUN pip3 install --editable .
+
+ENTRYPOINT ["scale_buddy"]
 

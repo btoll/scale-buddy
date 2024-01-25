@@ -1,15 +1,15 @@
 import setuptools
 
 
-#setup(name="scale_buddy",
+#setup(name="scale-buddy",
 #      version="0.1",
-#      scripts=["bin/scale_buddy"],
+#      scripts=["bin/scale-buddy"],
 #      description="Scale buddy, scale buddy, more than meets the eye!",
-#      url="http://github.com/btoll/music_buddy/scale_buddy",
+#      url="http://github.com/btoll/music_buddy/scale-buddy",
 #      author="btoll",
 #      author_email="benjam72@yahoo.com",
 #      license="GPLv3+",
-#      packages=["scale_buddy"],
+#      packages=["scale-buddy"],
 #      include_package_data=True,
 #      classifiers=[
 #          # https://pypi.org/pypi?%3Aaction=list_classifiers

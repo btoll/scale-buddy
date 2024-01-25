@@ -1,7 +1,7 @@
 import functools
 import unittest
 
-from scale_buddy import scales
+from scale-buddy import scales
 
 
 major_pentatonic_scale = functools.partial(scales.get_scale, scale_type="major_pentatonic")

@@ -4,7 +4,7 @@
 # https://www.jazzguitar.be/blog/melodic-minor-modes/
 import argparse
 
-import scale_buddy.scales as scales
+import scale-buddy.scales as scales
 
 
 parser = argparse.ArgumentParser()

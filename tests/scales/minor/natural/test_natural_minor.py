@@ -1,7 +1,7 @@
 import functools
 import unittest
 
-from scale_buddy import scales
+from scale-buddy import scales
 
 
 natural_minor_scale = functools.partial(scales.get_scale, scale_type="natural_minor")

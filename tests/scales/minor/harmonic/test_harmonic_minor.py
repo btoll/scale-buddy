@@ -1,7 +1,7 @@
 import functools
 import unittest
 
-from scale_buddy import scales
+from scale-buddy import scales
 
 
 harmonic_minor_scale = functools.partial(scales.get_scale, scale_type="harmonic_minor")

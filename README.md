@@ -5,19 +5,19 @@ Check out [the excellent guest post about Scale Buddy] by visiting professor Kil
 ### Source
 
 ```
-$ git clone https://github.com/btoll/scale_buddy.git
-$ cd scale_buddy
+$ git clone https://github.com/btoll/scale-buddy.git
+$ cd scale-buddy
 $ pip3 install --editable .
 ```
 
-This will install a "binary" to `$HOME/.local/bin/scale_buddy`.
+This will install a "binary" to `$HOME/.local/bin/scale-buddy`.
 
-If `scale_buddy` cannot be found as a command-line tool, make sure that `$HOME/.local/bin` is in your `PATH`.
+If `scale-buddy` cannot be found as a command-line tool, make sure that `$HOME/.local/bin` is in your `PATH`.
 
 > Want to know more about how the binary is installed?  Of course you do!  The Python tooling is called [`console_scripts`], and you can find a brief introduction and example [elsewhere on my website].
 
 ```
-$ scale_buddy G
+$ scale-buddy G
 G major:
 G  A  B  C  D  E  F♯
 ```
@@ -29,27 +29,27 @@ G  A  B  C  D  E  F♯
 #### Download
 
 ```
-docker pull btoll/scale_buddy:beta
+docker pull btoll/scale-buddy:beta
 ```
 
-https://hub.docker.com/r/btoll/scale_buddy
+https://hub.docker.com/r/btoll/scale-buddy
 
 #### Build
 
 ```
-$ docker build -t scale_buddy:beta .
+$ docker build -t scale-buddy:beta .
 ```
 
 #### Examples
 
 ```
-$ docker run --init --rm scale_buddy:beta G
+$ docker run --init --rm scale-buddy:beta G
 G major:
 G  A  B  C  D  E  F♯
 ```
 
 ```
-$ docker run --init --rm scale_buddy:beta G --with-minor
+$ docker run --init --rm scale-buddy:beta G --with-minor
 G major:
 G  A  B  C  D  E  F♯
 
@@ -64,7 +64,7 @@ G  A  B♭  C  D  E  F♯
 ```
 
 ```
-$ docker run --init --rm scale_buddy:beta G --with-minor --with-pentatonic
+$ docker run --init --rm scale-buddy:beta G --with-minor --with-pentatonic
 G major:
 G  A  B  C  D  E  F♯
 
@@ -87,13 +87,13 @@ G    B♭    C    D    F
 For sharps and flats, there are the `--sharp` and `--flat` switches, respectively:
 
 ```
-$ docker run --init --rm scale_buddy:beta --sharp F
+$ docker run --init --rm scale-buddy:beta --sharp F
 F♯ major:
 F♯  G♯  A♯  B  C♯  D♯  E♯
 ```
 
 ```
-$ docker run --init --rm scale_buddy:beta --flat E
+$ docker run --init --rm scale-buddy:beta --flat E
 E♭ major:
 E♭  F  G  A♭  B♭  C  D
 ```
